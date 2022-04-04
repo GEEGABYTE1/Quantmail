@@ -42,5 +42,7 @@ class Messages:
             else:
                 time = datetime.now().strftime("%X")
                 msg = {"Id": person, "Message": message, "Date": date, "Time":time}
+                # Quantum Encryption Here
                 self.db.insert_one(msg)
+                print(colored('Message sent successfully', 'green'))
                 print('-'*25)

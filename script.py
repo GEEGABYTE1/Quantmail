@@ -1,5 +1,6 @@
 from re import I
 from accounts import Users
+from messaging import Messages
 from termcolor import colored
 import time
 
@@ -24,6 +25,9 @@ class Script:
             if self.account_run.signed_in == True:
                 if user_prompt == '/email':
                     pass 
+                elif user_prompt == '/sgc':         # Send global chat
+                    runtime = Messages()
+                    runtime.sending_message(self.account_run.logged_in_user[0])
             else:
                 print(colored("You are not signed in yet!", 'red'))
 
