@@ -16,7 +16,7 @@ class Users:
         password = str(input("Please enter a password: "))
         if user_name == '/quit' or password == '/quit':
             return False
-        acc = {'User': user_name, 'Password': password}
+        acc = {'User': user_name, 'Password': password, 'Inbox':[]}
         self.db.insert_one(acc)
         return True
 
