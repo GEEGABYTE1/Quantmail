@@ -4,6 +4,7 @@ import time
 import certifi
 from qiskit import QuantumCircuit
 
+qcs = {} 
 
 class Users:
     cluster = MongoClient("mongodb+srv://GEEGABYTE1:12345@socialmedia.few6z.mongodb.net/myFirstDatabase?retryWrites=true&w=majority", tls=True, tlsAllowInvalidCertificates=True)
@@ -18,8 +19,11 @@ class Users:
         password = str(input("Please enter a password: "))
         if user_name == '/quit' or password == '/quit':
             return False
-        acc = {'User': user_name, 'Password': password, 'Inbox':[], 'qc': QuantumCircuit(2, 2)}
-        self.personal_qc = acc['qc']
+        acc = {'User': user_name, 'Password': password, 'Inbox':[]}
+        qcs[user_name] =  QuantumCircuit(2, 2)
+        self.personal_qc = qcs[user_name]
+        self.personal_qc.h(1)
+        self.personal_qc.cx(1, 0)
         self.db.insert_one(acc)
         return True
 
