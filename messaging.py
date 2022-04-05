@@ -8,6 +8,7 @@ from qiskit import QuantumCircuit
 from qiskit.quantum_info import Statevector
 from qiskit import Aer
 from accounts import qcs
+import time
 
 
 
@@ -23,8 +24,10 @@ restart = False
 
 
 class Messages:
+    root_user = None
 
     def sending_message(self, user, personal_qc, circuits):
+        self.root_user = user
         while True:
             #names = []
             all_messages = db.find({})
@@ -62,8 +65,6 @@ class Messages:
             message = message.strip(' ')
             if message == '/quit':
                 break
-            elif message == '/update':
-                self.restart()
             elif len(message) > 2:
                 print('Message is too long')
             elif '0' not in message or '1' not in message:
@@ -90,7 +91,41 @@ class Messages:
 
     def send_email(self, personal_qc):
         desired_user = str(input("Please type in the Desired User: "))
-        
+        desired_user = desired_user.strip(' ')
+        all_accounts = account_db.find({})
+        user_found = False
+        for account_dict in all_accounts:
+            name = account_dict['User']
+            inbox = account_dict['Inbox']
+            if desired_user == name:
+                user_found = True
+                print('You may now type your message: ')
+                time.sleep(0.3)
+                while True:
+                    user_message = str(input(colored(': ')))
+                    if user_message == '/quit':
+                        print('You have left the Emailing process')
+                        break 
+                    elif user_message > 2:
+                        print(colored('Message is too long', 'red'))
+                    elif '0' not in user_message or '1' not in user_message:
+                        print(colored('Please ensure you have typed double gated qubits only!', 'red'))
+                    else:
+                        break
+                try:
+                    user_message = user_message.strip(' ')
+                    new_user_message = self.decrypt(personal_qc, user_message)
+                    email = {'Sender': self.root_user, 'Message':new_user_message, 'Date':datetime.now().strftime("%x")} 
+                    account_dict['Inbox'].append(email)
+                    print(colored('Email Sent Successfully!' , 'green'))
+                except:
+                    return
+            else:
+                continue
+        if user_found == False:
+            print(colored('User not found', 'red'))
+        else:
+            pass
     
     def decrypt(self, personal_qc, message):
         if message[-2] == '1':

@@ -38,7 +38,7 @@ class Script:
                 elif user_prompt == '/sgc':         # Send global chat         
                     self.runtime.sending_message(self.account_run.logged_in_user[0], self.personal_qc, self.quantum_circuits)
                 elif user_prompt == '/send_email':
-                    pass
+                    self.runtime.send_email(personal_qc=self.personal_qc)
             else:
                 print(colored("You are not signed in yet!", 'red'))
 

@@ -16,6 +16,7 @@ class Users:
     logged_in_user = None
     personal_qc = None
     user_user = None
+    sign_up_run = False
 
     def sign_up(self):
         user_name = str(input("Please enter a username you would like to go by (Note: Users externally will see this name): "))
@@ -30,6 +31,7 @@ class Users:
         #all_qcs = self.qc_db.find({})
         #self.qc_db.insert_one({'Name':user_name})
         self.db.insert_one(acc)
+        self.sign_up_run = True
         return True
 
     def sign_in(self):
@@ -52,9 +54,15 @@ class Users:
                         break
                     elif password in passwords:
                         self.signed_in = True 
-                        self.logged_in_user = [user, password, []]
-                        print(colored("You have successfully signed in! ", 'green'))
-                        break
+                        if self.sign_up_run == False:
+                            self.logged_in_user = [user, password, []]
+                            established_circuit = QuantumCircuit(2, 2)
+                            established_circuit.h(1)
+                            established_circuit.cx(1, 0)
+                            self.personal_qc = established_circuit
+                            print(colored('Circuit Added', 'cyan'))
+                            print(colored("You have successfully signed in! ", 'green'))
+                            break
                     else:
                         print("Password is incorrect")
 
