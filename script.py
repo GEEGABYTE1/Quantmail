@@ -6,8 +6,9 @@ import time
 
 
 class Script:
-    account_run = Users()
+    account_run = Users()  
     personal_qc = None
+    quantum_circuits = {account_run.logged_in_user[0]:personal_qc}
     runtime = Messages()
     def __init__(self):
         
@@ -31,7 +32,7 @@ class Script:
                 if user_prompt == '/email':
                     pass 
                 elif user_prompt == '/sgc':         # Send global chat         
-                    self.runtime.sending_message(self.account_run.logged_in_user[0], self.personal_qc)
+                    self.runtime.sending_message(self.account_run.logged_in_user[0], self.personal_qc, self.quantum_circuits)
                 elif user_prompt == '/send_email':
                     pass
             else:

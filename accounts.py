@@ -15,6 +15,7 @@ class Users:
     signed_in = False
     logged_in_user = None
     personal_qc = None
+    user_user = None
 
     def sign_up(self):
         user_name = str(input("Please enter a username you would like to go by (Note: Users externally will see this name): "))

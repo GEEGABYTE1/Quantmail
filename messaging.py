@@ -22,18 +22,20 @@ restart = False
 
 
 
-
-
 class Messages:
 
-    def sending_message(self, user, personal_qc):
+    def sending_message(self, user, personal_qc, circuits):
         while True:
-            names = []
+            #names = []
             all_messages = db.find({})
             for message in all_messages:
                 name = message['Id']
                 name = name.strip('Name: ')
-                names.append(name)
+                circuit_names = list(circuits.keys())
+                if name != circuit_names:
+                    circuit_names[name] = QuantumCircuit(2, 2)
+                    
+            
             date = datetime.now().strftime("%x")
             all_messages = db.find({})
             all_qcs = qc_db.find({})
@@ -45,10 +47,7 @@ class Messages:
                         print(colored("{} ~ {}".format(message['Date'], message['Time']), "red"))
                     print(colored("From: ", 'green'), message['Id'])
                     name_split = message['Id'].strip('Name: ')
-                    message = message['Id']
-                            
-
-                            
+                                   
                     # Quantum Decryption
                     message_dict = self.untangle(personal_qc)
                     decrypted_message = list(message_dict.keys())[0]
