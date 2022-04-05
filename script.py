@@ -8,7 +8,7 @@ import time
 class Script:
     account_run = Users()  
     personal_qc = None
-    quantum_circuits = {account_run.logged_in_user[0]:personal_qc}
+    quantum_circuits = None
     runtime = Messages()
     def __init__(self):
         
@@ -25,6 +25,10 @@ class Script:
                     continue
             elif user_prompt == '/sign_in':
                 self.account_run.sign_in()
+                try:
+                    self.quantum_circuits = {self.account_run.logged_in_user[0]:self.personal_qc}
+                except:
+                    continue
 
             
             if self.account_run.signed_in == True:

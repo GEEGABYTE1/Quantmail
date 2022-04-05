@@ -32,7 +32,7 @@ class Messages:
                 name = message['Id']
                 name = name.strip('Name: ')
                 circuit_names = list(circuits.keys())
-                if name != circuit_names:
+                if name not in circuit_names:
                     circuit_names[name] = QuantumCircuit(2, 2)
                     
             
@@ -93,7 +93,7 @@ class Messages:
     def decrypt(self, personal_qc, message):
         if message[-2] == '1':
             personal_qc.x(1)
-            message[-2] = '0'
+            #message[-2] = '0'
         if message[-1] == '1':
             personal_qc.z(1)
         
@@ -109,7 +109,7 @@ class Messages:
         resulting_qc.cx(0, 1)
         resulting_qc.h(0)
         resulting_qc.measure([0, 1], [0, 1])
-        backend = Aer.get_back('aer_simulator')
+        backend = Aer.get_backend('aer_simulator')
         resulting_dictionary = backend.run(personal_qc.compose(resulting_qc)).result().get_counts()
         return resulting_dictionary
         
