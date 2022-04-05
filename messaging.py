@@ -12,12 +12,19 @@ from accounts import qcs
 
 
 
-
 cluster = MongoClient("mongodb+srv://GEEGABYTE1:12345@socialmedia.few6z.mongodb.net/myFirstDatabase?retryWrites=true&w=majority", tls=True, tlsAllowInvalidCertificates=True)
 db = cluster['socialmedia']['messaging']
 
 chats = {}
 restart = False
+
+
+names = []
+
+all_messages = db.find({})
+for message in all_messages:
+    name = message['Id']
+    names.append(name)
 
 
 class Messages:
@@ -34,7 +41,11 @@ class Messages:
                         print(colored("{} ~ {}".format(message['Date'], message['Time']), "red"))
                     print(colored("From: ", 'green'), message['Id'])
                     name_split = message['Id'].strip('Name: ')
-                    sender_qc = qcs[name_split]
+                    for name in names:
+                        if name == name_split:
+                            sender_qc = qcs[name]
+                        else:
+                            continue
                     # Quantum Decryption
                     message_dict = self.untangle(sender_qc, personal_qc)
                     decrypted_message = list(message_dict.keys())[0]
@@ -62,6 +73,10 @@ class Messages:
                 print(colored('Message sent successfully', 'green'))
                 print('-'*25)
 
+
+    def send_email(self, personal_qc):
+        desired_user = str(input("Please type in the Desired User: "))
+        
     
     def decrypt(self, personal_qc, message):
         if message[-2] == '1':
