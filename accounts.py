@@ -4,11 +4,13 @@ import time
 import certifi
 from qiskit import QuantumCircuit
 
-qcs = {} 
+qcs = []
 
 class Users:
     cluster = MongoClient("mongodb+srv://GEEGABYTE1:12345@socialmedia.few6z.mongodb.net/myFirstDatabase?retryWrites=true&w=majority", tls=True, tlsAllowInvalidCertificates=True)
     db = cluster['socialmedia']['accounts']
+    qc_db = cluster['socialmedia']['qc']
+    qc_db.insert_one({})
     all_accounts = db.find({})
     signed_in = False
     logged_in_user = None
@@ -20,10 +22,12 @@ class Users:
         if user_name == '/quit' or password == '/quit':
             return False
         acc = {'User': user_name, 'Password': password, 'Inbox':[]}
-        qcs[user_name] =  QuantumCircuit(2, 2)
-        self.personal_qc = qcs[user_name]
-        self.personal_qc.h(1)
-        self.personal_qc.cx(1, 0)
+        qcs.append({user_name:QuantumCircuit(2, 2)}) 
+        qcs[0][user_name].h(1)
+        qcs[0][user_name].cx(1, 0)
+        self.personal_qc = qcs[0][user_name]
+        #all_qcs = self.qc_db.find({})
+        #self.qc_db.insert_one({'Name':user_name})
         self.db.insert_one(acc)
         return True
 

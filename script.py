@@ -14,11 +14,14 @@ class Script:
         while True:
             user_prompt = str(input(': '))
             if user_prompt == '/sign_up':
-                self.account_run.sign_up()
-                print(colored('Successfully Signed Up', 'green'))
-                time.sleep(0.2)
-                print(colored('You can now proceed to sign in', 'white'))
-                continue
+                initial_run = self.account_run.sign_up()
+                if initial_run == False:
+                    print(colored('You have exited the Signing up Process', 'cyan'))
+                else:
+                    print(colored('Successfully Signed Up', 'green'))
+                    time.sleep(0.2)
+                    print(colored('You can now proceed to sign in', 'white'))
+                    continue
             elif user_prompt == '/sign_in':
                 self.account_run.sign_in()
 
