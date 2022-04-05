@@ -8,7 +8,6 @@ from qiskit import QuantumCircuit
 from qiskit.quantum_info import Statevector
 from qiskit import Aer
 from accounts import qcs
-from doublell import DoubleLinkedList, Node
 import time
 
 
