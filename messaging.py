@@ -66,6 +66,8 @@ class Messages:
                 self.restart()
             elif len(message) > 2:
                 print('Message is too long')
+            elif '0' not in message or '1' not in message:
+                print(colored('Message is invalid, please type in Double Gates', 'red'))
             else:
                 time = datetime.now().strftime("%X")
                 new_message = self.decrypt(personal_qc, message)
@@ -97,7 +99,7 @@ class Messages:
         if message[-1] == '1':
             personal_qc.z(1)
         
-
+        print(colored('Decryption in Process', 'white'))
         ket = Statevector(personal_qc)
         ket.draw()
         return message
@@ -108,6 +110,7 @@ class Messages:
         resulting_qc = QuantumCircuit(2, 2)
         resulting_qc.cx(0, 1)
         resulting_qc.h(0)
+        print(colored('Entanglement in Process', 'white'))
         resulting_qc.measure([0, 1], [0, 1])
         backend = Aer.get_backend('aer_simulator')
         resulting_dictionary = backend.run(personal_qc.compose(resulting_qc)).result().get_counts()
