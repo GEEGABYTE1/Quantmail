@@ -33,8 +33,8 @@ class Script:
             
             if self.account_run.signed_in == True:
                 self.personal_qc = self.account_run.personal_qc
-                if user_prompt == '/email':
-                    pass 
+                if user_prompt == '/inbox':
+                    self.runtime.receive_email(self.personal_qc, self.account_run.logged_in_user[0])
                 elif user_prompt == '/sgc':         # Send global chat         
                     self.runtime.sending_message(self.account_run.logged_in_user[0], self.personal_qc, self.quantum_circuits)
                 elif user_prompt == '/send_email':
@@ -49,3 +49,4 @@ class Script:
 
 
 test = Script()
+

@@ -8,6 +8,7 @@ from qiskit import QuantumCircuit
 from qiskit.quantum_info import Statevector
 from qiskit import Aer
 from accounts import qcs
+from doublell import DoubleLinkedList, Node
 import time
 
 
@@ -17,6 +18,7 @@ cluster = MongoClient("mongodb+srv://GEEGABYTE1:12345@socialmedia.few6z.mongodb.
 db = cluster['socialmedia']['messaging']
 qc_db = cluster['socialmedia']['qc']
 account_db = cluster['socialmedia']['accounts']
+email_db = cluster['socialmedia']['email']
 
 chats = {}
 restart = False
@@ -67,8 +69,6 @@ class Messages:
                 break
             elif len(message) > 2:
                 print('Message is too long')
-            elif '0' not in message or '1' not in message:
-                print(colored('Message is invalid, please type in Double Gates', 'red'))
             else:
                 time = datetime.now().strftime("%X")
                 new_message = self.decrypt(personal_qc, message)
@@ -87,16 +87,33 @@ class Messages:
             count += 1
 
         return names_in_order
-        
+
+    
+    def receive_email(self, personal_qc, root_user):
+        print('Checking your Inbox...')
+        time.sleep(0.2)
+        all_emails = email_db.find({})
+        for email_dict in all_emails:
+            email_receiver = email_dict['Receiver']
+            if email_dict['Sender'] == self.root_user:
+                email_message = email_dict['Message']
+                message_dict = self.untangle(personal_qc)
+                decrypted_message = list(message_dict.keys())[0]
+                print('-'*24)
+                print(colored('Name: {}'.format(email_dict['Sender']), 'white'))
+                print(colored('Message: {}'.format(decrypted_message), 'white'))
+                print(colored('Time: {}'.format(email_dict['Date']), 'white'))
+                time.sleep(0.1)
+
 
     def send_email(self, personal_qc):
         desired_user = str(input("Please type in the Desired User: "))
         desired_user = desired_user.strip(' ')
-        all_accounts = account_db.find({})
+        all_accounts = list(account_db.find({}))
         user_found = False
-        for account_dict in all_accounts:
-            name = account_dict['User']
-            inbox = account_dict['Inbox']
+        for account_dict in range(len(all_accounts)):
+            name = all_accounts[account_dict]['User']
+            inbox = all_accounts[account_dict]['Inbox']
             if desired_user == name:
                 user_found = True
                 print('You may now type your message: ')
@@ -106,20 +123,19 @@ class Messages:
                     if user_message == '/quit':
                         print('You have left the Emailing process')
                         break 
-                    elif user_message > 2:
+                    elif len(user_message) > 2:
                         print(colored('Message is too long', 'red'))
-                    elif '0' not in user_message or '1' not in user_message:
-                        print(colored('Please ensure you have typed double gated qubits only!', 'red'))
                     else:
                         break
-                try:
-                    user_message = user_message.strip(' ')
-                    new_user_message = self.decrypt(personal_qc, user_message)
-                    email = {'Sender': self.root_user, 'Message':new_user_message, 'Date':datetime.now().strftime("%x")} 
-                    account_dict['Inbox'].append(email)
-                    print(colored('Email Sent Successfully!' , 'green'))
-                except:
-                    return
+                #try:
+                user_message = user_message.strip(' ')
+                new_user_message = self.decrypt(personal_qc, user_message)
+                email = {'Sender': self.root_user, 'Receiver': desired_user, 'Message':new_user_message, 'Date':datetime.now().strftime("%x")} 
+                email_db.insert_one(email)
+                print(all_accounts[account_dict]['Inbox'])
+                print(colored('Email Sent Successfully!' , 'green'))
+                #except:
+                    #return
             else:
                 continue
         if user_found == False:

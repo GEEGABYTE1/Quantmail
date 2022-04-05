@@ -23,7 +23,7 @@ class Users:
         password = str(input("Please enter a password: "))
         if user_name == '/quit' or password == '/quit':
             return False
-        acc = {'User': user_name, 'Password': password, 'Inbox':[]}
+        acc = {'User': user_name, 'Password': password, 'Inbox':''}
         qcs.append({user_name:QuantumCircuit(2, 2)}) 
         qcs[0][user_name].h(1)
         qcs[0][user_name].cx(1, 0)
@@ -55,7 +55,7 @@ class Users:
                     elif password in passwords:
                         self.signed_in = True 
                         if self.sign_up_run == False:
-                            self.logged_in_user = [user, password, []]
+                            self.logged_in_user = [user, password, '']
                             established_circuit = QuantumCircuit(2, 2)
                             established_circuit.h(1)
                             established_circuit.cx(1, 0)
