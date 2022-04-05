@@ -7,6 +7,7 @@ import time
 
 class Script:
     account_run = Users()
+    personal_qc = account_run.personal_qc
     def __init__(self):
 
         while True:
@@ -27,7 +28,9 @@ class Script:
                     pass 
                 elif user_prompt == '/sgc':         # Send global chat
                     runtime = Messages()
-                    runtime.sending_message(self.account_run.logged_in_user[0])
+                    runtime.sending_message(self.account_run.logged_in_user[0], self.personal_qc)
+                elif user_prompt == '/send_email':
+                    pass
             else:
                 print(colored("You are not signed in yet!", 'red'))
 

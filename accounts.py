@@ -2,6 +2,7 @@ from pymongo import MongoClient
 from termcolor import colored
 import time
 import certifi
+from qiskit import QuantumCircuit
 
 
 class Users:
@@ -10,13 +11,15 @@ class Users:
     all_accounts = db.find({})
     signed_in = False
     logged_in_user = None
+    personal_qc = None
 
     def sign_up(self):
         user_name = str(input("Please enter a username you would like to go by (Note: Users externally will see this name): "))
         password = str(input("Please enter a password: "))
         if user_name == '/quit' or password == '/quit':
             return False
-        acc = {'User': user_name, 'Password': password, 'Inbox':[]}
+        acc = {'User': user_name, 'Password': password, 'Inbox':[], 'qc': QuantumCircuit(2, 2)}
+        self.personal_qc = acc['qc']
         self.db.insert_one(acc)
         return True
 
